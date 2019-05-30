@@ -1,5 +1,6 @@
 import os
 import shutil
+import time
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 from getpass import getpass
@@ -7,8 +8,9 @@ import json
 
 
 class SeDASAPI:
-    authentication_url = "https://geobrowser.satapps.org/api/authentication"
-    search_url = "https://geobrowser.satapps.org/api/search"
+    base_url = "https://geobrowser.satapps.org/api/"
+    authentication_url = f"{base_url}authentication"
+    search_url = f"{base_url}search"
     headers = {"Content-Type": "application/json", "Authorization": None}
 
     _token = None
@@ -99,6 +101,30 @@ class SeDASAPI:
             with open(_output_path, "+wb") as f:
                 shutil.copyfileobj(resp, f)
 
+    def request(self, _product):
+        """
+        Request a file from the SeDAS long term archive
+        :param _product: product to request from the search
+        :return: Request ID
+        """
+        url = f"{self.base_url}/request/{_product['supplierId']}"
+        req = Request(url, headers=self.headers, method="POST")
+        resp = urlopen(req)
+        return json.load(resp)['requestId']
+
+    def is_request_ready(self, _request_id):
+        """
+        checks on the status of a request. If it is complete it will return the download url
+        :param _request_id: request id to check on.
+        :return: download url if the request is complete, None otherwise
+        """
+        url = f"{self.base_url}/request?ids={_request_id}"
+        req = Request(url, headers=self.headers)
+        decoded = json.load(urlopen(req))
+        if len(decoded) > 1 and 'downloadUrl' in decoded[0]:
+            return decoded[0]['downloadUrl']
+        return None
+
 
 if __name__ == '__main__':
     wkt = "POLYGON ((-78.0294047453918 7.54828534191209,-75.5410318208992 4.9335544228762,-73.5283895711597 6.84893487157956,-76.0167624956523 9.46366579061545,-78.0294047453918 7.54828534191209))"
@@ -115,5 +141,17 @@ if __name__ == '__main__':
 
     for product in result['products']:
         o = os.path.join(output_path, product['supplierId'] + ".zip")
-        print(f"downloading {product['supplierId']} to {o}")
-        sedas.download(product, o)
+        if 'downloadURL' in product:
+            print(f"downloading {product['supplierId']} to {o}")
+            sedas.download(product, o)
+        else:
+            print(f"no download url for {product['supplierId']} submitting lta request")
+            request_id = sedas.request(product)
+            dl = sedas.is_request_ready(request_id)
+            while not dl:
+                time.sleep(5)
+                print(f"checking on {request_id} for {product['supplierId']} again...")
+                dl = sedas.is_request_ready(request_id)
+            print("downloading {product['supplierId']} to {o}")
+            product["downloadUrl"] = dl
+            sedas.download(product, o)
