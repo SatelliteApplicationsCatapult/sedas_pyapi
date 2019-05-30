@@ -89,7 +89,7 @@ if __name__ == '__main__':
     __password = getpass("Please enter your password:")
     sedas = SeDASAPI(_username, __password)
     result = sedas.search("SAR", wkt, startDate, endDate)
-    print(json.dumps(result))
+    print(json.dumps(result, sort_keys=True, indent=4, separators=(',', ': ')))
 
     for product in result['products']:
         o = os.path.join(output_path, product['supplierId'] + ".zip")
