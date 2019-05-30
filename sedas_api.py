@@ -71,6 +71,18 @@ class SeDASAPI:
         :return: list of search results
         """
         return self.search(_wkt, _start_date, _end_date, 'SAR', **_filters)
+
+    def search_optical(self, _wkt, _start_date, _end_date, **_filters):
+        """
+        Search the SeDAS system for Optical products only with the given parameters
+        :param _wkt: wkt formatted aoi
+        :param _start_date: start date of search in ISO8601 format
+        :param _end_date: end date of search in ISO8601 format
+        :param _filters: filter search on
+        :return: list of search results
+        """
+        return self.search(_wkt, _start_date, _end_date, 'Optical', **_filters)
+
     def download(self, _product, _output_path):
         """
         download a product from sedas
