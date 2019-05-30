@@ -13,10 +13,9 @@ class SeDASAPI:
 
     _token = None
 
-    def __init__(self):
-        self._username = input("Please enter your username:")
-        self.__password = getpass("Please enter your password:")
-
+    def __init__(self, _username, __password):
+        self._username = _username
+        self.__password = __password
         self.login()
 
     def login(self):
@@ -33,7 +32,7 @@ class SeDASAPI:
             headers={"Content-Type": "application/json"}
         )
         self._token = json.load(urlopen(req))['token']
-        self.headers['Authorization'] = self._token
+        self.headers['Authorization'] = f"Token {self._token}"
 
     def search(self, _sensor, _wkt, _start_date, _end_date, **_filters):
         """
@@ -85,7 +84,10 @@ if __name__ == '__main__':
     endDate = "2019-05-30T23:59:59Z"
 
     output_path = "/tmp/"
-    sedas = SeDASAPI()
+
+    _username = input("Please enter your username:")
+    __password = getpass("Please enter your password:")
+    sedas = SeDASAPI(_username, __password)
     result = sedas.search("SAR", wkt, startDate, endDate)
     print(json.dumps(result))
 
