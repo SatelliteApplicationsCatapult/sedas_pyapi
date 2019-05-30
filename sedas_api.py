@@ -34,14 +34,14 @@ class SeDASAPI:
         self._token = json.load(urlopen(req))['token']
         self.headers['Authorization'] = f"Token {self._token}"
 
-    def search(self, _sensor, _wkt, _start_date, _end_date, **_filters):
+    def search(self, _wkt, _start_date, _end_date, _sensor='All', **_filters):
         """
-        search the sedas system for the given parameters
-        :param _sensor: the type of sensor to query one of 'All', 'Optical', or 'SAR'
+        Search the SeDAS system for products with the given parameters
         :param _wkt: wkt formatted aoi
-        :param _start_date: start date to look for
-        :param _end_date: end date to look for
-        :param _filters: other parameters
+        :param _start_date: start date of search in ISO8601 format
+        :param _end_date: end date of search in ISO8601 format
+        :parma _sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
+        :param _filters: filter search on
         :return: list of search results
         """
         query = {
@@ -60,7 +60,29 @@ class SeDASAPI:
             print(e)
             print(e.read().decode())
             raise e
-    
+
+    def search_sar(self, _wkt, _start_date, _end_date, **_filters):
+        """
+        Search the SeDAS system for SAR products only with the given parameters
+        :param _wkt: wkt formatted aoi
+        :param _start_date: start date of search in ISO8601 format
+        :param _end_date: end date of search in ISO8601 format
+        :param _filters: filter search on
+        :return: list of search results
+        """
+        return self.search(_wkt, _start_date, _end_date, 'SAR', **_filters)
+
+    def search_optical(self, _wkt, _start_date, _end_date, **_filters):
+        """
+        Search the SeDAS system for Optical products only with the given parameters
+        :param _wkt: wkt formatted aoi
+        :param _start_date: start date of search in ISO8601 format
+        :param _end_date: end date of search in ISO8601 format
+        :param _filters: filter search on
+        :return: list of search results
+        """
+        return self.search(_wkt, _start_date, _end_date, 'Optical', **_filters)
+
     def download(self, _product, _output_path):
         """
         download a product from sedas
