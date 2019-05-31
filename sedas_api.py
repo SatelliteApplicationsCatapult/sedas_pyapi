@@ -8,6 +8,14 @@ import json
 
 
 class SeDASAPI:
+    """
+    SeDASAPI provides easy access to the SeDAS API.
+
+    Create an instance of this object providing your username and password.
+    Then use this class to search for data or download data.
+
+    See the main at the end of this file for examples of how to use this.
+    """
     base_url = "https://geobrowser.satapps.org/api/"
     authentication_url = f"{base_url}authentication"
     search_url = f"{base_url}search"
@@ -38,11 +46,11 @@ class SeDASAPI:
 
     def search(self, _wkt, _start_date, _end_date, _sensor='All', **_filters):
         """
-        Search the SeDAS system for products with the given parameters
+        Search the SeDAS system for products with the given parameters.
         :param _wkt: wkt formatted aoi
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
-        :parma _sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
+        :param _sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
         :param _filters: filter search on
         :return: list of search results
         """
@@ -85,6 +93,22 @@ class SeDASAPI:
         """
         return self.search(_wkt, _start_date, _end_date, 'Optical', **_filters)
 
+    def search_product(self, _product_id):
+        """
+        Search for information about a known product id.
+        :param _product_id: product id to look for
+        :return: search result dictionary
+        """
+        url = f"{self.search_url}/products?ids={_product_id}"
+        req = Request(url, headers=self.headers)
+        try:
+            with urlopen(req) as resp:
+                return json.load(resp)
+        except HTTPError as e:
+            print(e)
+            print(e.read().decode())
+            raise e
+
     def download(self, _product, _output_path):
         """
         download a product from sedas
@@ -98,6 +122,8 @@ class SeDASAPI:
             raise AttributeError("no download url defined for product")
         req = Request(url, headers=self.headers)
         with urlopen(req) as resp:
+            # TODO: consider a version of this function that returns the resp object so it doesn't have to touch the
+            #  disk in cases where that is better
             with open(_output_path, "+wb") as f:
                 shutil.copyfileobj(resp, f)
 
@@ -127,7 +153,11 @@ class SeDASAPI:
 
 
 if __name__ == '__main__':
-    wkt = "POLYGON ((-78.0294047453918 7.54828534191209,-75.5410318208992 4.9335544228762,-73.5283895711597 6.84893487157956,-76.0167624956523 9.46366579061545,-78.0294047453918 7.54828534191209))"
+    wkt = "POLYGON ((-78.0294047453918 7.54828534191209," \
+          "-75.5410318208992 4.9335544228762," \
+          "-73.5283895711597 6.84893487157956," \
+          "-76.0167624956523 9.46366579061545," \
+          "-78.0294047453918 7.54828534191209))"
     startDate = "2019-04-30T00:00:00Z"
     endDate = "2019-05-30T23:59:59Z"
 
@@ -135,10 +165,18 @@ if __name__ == '__main__':
 
     _username = input("Please enter your username:")
     __password = getpass("Please enter your password:")
+
     sedas = SeDASAPI(_username, __password)
-    result = sedas.search("SAR", wkt, startDate, endDate)
+
+    print("search by aoi and sensor type...")
+    result = sedas.search(wkt, startDate, endDate, "SAR")
     print(json.dumps(result, sort_keys=True, indent=4, separators=(',', ': ')))
 
+    print("single product query...")
+    singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
+    print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    print("Downloading results of aoi search...")
     for product in result['products']:
         o = os.path.join(output_path, product['supplierId'] + ".zip")
         if 'downloadURL' in product:
