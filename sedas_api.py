@@ -1,10 +1,11 @@
-import os
+import json
 import shutil
 import time
-from urllib.request import Request, urlopen
-from urllib.error import HTTPError
 from getpass import getpass
-import json
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
+
+from bulk_download import SeDASBulkDownload
 
 
 class SeDASAPI:
@@ -178,8 +179,8 @@ if __name__ == '__main__':
           "-73.5283895711597 6.84893487157956," \
           "-76.0167624956523 9.46366579061545," \
           "-78.0294047453918 7.54828534191209))"
-    startDate = "2019-04-30T00:00:00Z"
-    endDate = "2019-05-30T23:59:59Z"
+    startDate = "2017-04-30T00:00:00Z"
+    endDate = "2017-05-12T23:59:59Z"
 
     output_path = "/tmp/"
 
@@ -197,19 +198,10 @@ if __name__ == '__main__':
     print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')))
 
     print("Downloading results of aoi search...")
-    for product in result['products']:
-        o = os.path.join(output_path, product['supplierId'] + ".zip")
-        if 'downloadURL' in product:
-            print(f"downloading {product['supplierId']} to {o}")
-            sedas.download(product, o)
-        else:
-            print(f"no download url for {product['supplierId']} submitting lta request")
-            request_id = sedas.request(product)
-            dl = sedas.is_request_ready(request_id)
-            while not dl:
-                time.sleep(5)
-                print(f"checking on {request_id} for {product['supplierId']} again...")
-                dl = sedas.is_request_ready(request_id)
-            print("downloading {product['supplierId']} to {o}")
-            product["downloadUrl"] = dl
-            sedas.download(product, o)
+
+    downloader = SeDASBulkDownload(sedas, output_path, parallel=3, verbose=True)
+    downloader.add(result['products'])
+    while not downloader.is_done():
+        time.sleep(5)
+    downloader.shutdown()
+    print("Download complete!")
