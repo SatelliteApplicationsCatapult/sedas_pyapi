@@ -41,8 +41,13 @@ class SeDASAPI:
             json.dumps(data).encode(),
             headers={"Content-Type": "application/json"}
         )
-        self._token = json.load(urlopen(req))['token']
-        self.headers['Authorization'] = f"Token {self._token}"
+        try:
+            self._token = json.load(urlopen(req))['token']
+            self.headers['Authorization'] = f"Token {self._token}"
+        except HTTPError as e:
+            print(e)
+            print(e.read().decode())
+            raise e
 
     def search(self, _wkt, _start_date, _end_date, _sensor='All', **_filters):
         """
@@ -121,11 +126,16 @@ class SeDASAPI:
         if not url:
             raise AttributeError("no download url defined for product")
         req = Request(url, headers=self.headers)
-        with urlopen(req) as resp:
-            # TODO: consider a version of this function that returns the resp object so it doesn't have to touch the
-            #  disk in cases where that is better
-            with open(_output_path, "+wb") as f:
-                shutil.copyfileobj(resp, f)
+        try:
+            with urlopen(req) as resp:
+                # TODO: consider a version of this function that returns the resp object so it doesn't have to touch the
+                #  disk in cases where that is better
+                with open(_output_path, "+wb") as f:
+                    shutil.copyfileobj(resp, f)
+        except HTTPError as e:
+            print(e)
+            print(e.read().decode())
+            raise e
 
     def request(self, _product):
         """
@@ -135,8 +145,13 @@ class SeDASAPI:
         """
         url = f"{self.base_url}/request/{_product['supplierId']}"
         req = Request(url, headers=self.headers, method="POST")
-        resp = urlopen(req)
-        return json.load(resp)['requestId']
+        try:
+            resp = urlopen(req)
+            return json.load(resp)['requestId']
+        except HTTPError as e:
+            print(e)
+            print(e.read().decode())
+            raise e
 
     def is_request_ready(self, _request_id):
         """
@@ -146,10 +161,15 @@ class SeDASAPI:
         """
         url = f"{self.base_url}/request?ids={_request_id}"
         req = Request(url, headers=self.headers)
-        decoded = json.load(urlopen(req))
-        if len(decoded) > 1 and 'downloadUrl' in decoded[0]:
-            return decoded[0]['downloadUrl']
-        return None
+        try:
+            decoded = json.load(urlopen(req))
+            if len(decoded) > 1 and 'downloadUrl' in decoded[0]:
+                return decoded[0]['downloadUrl']
+            return None
+        except HTTPError as e:
+            print(e)
+            print(e.read().decode())
+            raise e
 
 
 if __name__ == '__main__':
