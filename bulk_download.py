@@ -73,6 +73,7 @@ class SeDASBulkDownload:
                 if download_url:
                     if self._verbose:
                         print(f"request {request_id} COMPLETE for {product['supplierId']}")
+                        print(f"Adding {product['supplierId']} to download queue")
                     product['downloadUrl'] = download_url
                     self._pending_download.put(product)
                     del self._pending_products[request_id]
