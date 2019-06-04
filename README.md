@@ -11,6 +11,7 @@ Requires python 3+ has been tested with 3.7
 ```python
 import json
 from getthestuff.sedas_api import SeDASAPI
+from getpass import getpass
 
 wkt = "POLYGON ((-78.0294047453918 7.54828534191209," \
           "-75.5410318208992 4.9335544228762," \
@@ -33,6 +34,7 @@ print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': '
 ```python
 import json
 from getthestuff.sedas_api import SeDASAPI
+from getpass import getpass
 
 wkt = "POLYGON ((-78.0294047453918 7.54828534191209," \
           "-75.5410318208992 4.9335544228762," \
@@ -55,6 +57,7 @@ print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 ```python
 import json
 from getthestuff.sedas_api import SeDASAPI
+from getpass import getpass
 
 _username = input("Please enter your username:")
 __password = getpass("Please enter your password:")
@@ -68,6 +71,7 @@ print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')
 
 ```python
 from getthestuff.sedas_api import SeDASAPI
+from getpass import getpass
 
 _username = input("Please enter your username:")
 __password = getpass("Please enter your password:")
@@ -83,6 +87,8 @@ Note with historical request this can take a while to recover the images from th
 ```python
 from getthestuff.bulk_download import SeDASBulkDownload
 from getthestuff.sedas_api import SeDASAPI
+from getpass import getpass
+import time
 
 wkt = "POLYGON ((-78.0294047453918 7.54828534191209," \
           "-75.5410318208992 4.9335544228762," \
