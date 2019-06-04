@@ -6,6 +6,19 @@ Requires python 3+ has been tested with 3.7
 
 ## Examples
 
+### Creating a client
+
+```python
+from getthestuff.sedas_api import SeDASAPI
+from getpass import getpass
+
+# This is a suggestion for how to get your username and password
+_username = input("Please enter your username:")
+__password = getpass("Please enter your password:")
+
+sedas = SeDASAPI(_username, __password)
+```
+
 ### Search for an optical AOI with cloud cover filters
 
 ```python
@@ -121,15 +134,13 @@ downloader.shutdown()
 
 ```
 
-
-
 ### Docker environment
 
 A simple docker environment is provided. This is probably not all that useful yet. 
 Run the following commands from this directory:
 
 ```shell
-docker build -t sedas-client:latest .
+make docker
 docker run -it sedas-client:latest /bin/bash
 ```
 
