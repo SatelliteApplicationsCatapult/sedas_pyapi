@@ -60,4 +60,5 @@ install: clean venv  ## install the package to the active Python's site-packages
 venv: setup.py
 	which virtualenv
 	virtualenv venv_make --python=python3
+	venv_make/bin/pip install --upgrade pip easy_install setuptools wheel
 	venv_make/bin/python --version
