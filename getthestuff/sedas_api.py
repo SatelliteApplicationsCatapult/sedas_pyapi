@@ -5,8 +5,7 @@ from getpass import getpass
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
-from bulk_download import SeDASBulkDownload
-
+from getthestuff.bulk_download import SeDASBulkDownload
 
 class SeDASAPI:
     """
