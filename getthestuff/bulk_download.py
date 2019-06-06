@@ -4,6 +4,7 @@ import queue
 import threading
 import time
 from getpass import getpass
+import json
 
 from getthestuff.sedas_api import SeDASAPI
 
@@ -124,6 +125,9 @@ class SeDASBulkDownload:
 
 
 if __name__ == '__main__':
+    """
+    The following is an example of 
+    """
     wkt = "POLYGON ((-78.0294047453918 7.54828534191209," \
           "-75.5410318208992 4.9335544228762," \
           "-73.5283895711597 6.84893487157956," \
@@ -137,10 +141,14 @@ if __name__ == '__main__':
     _username = input("Please enter your username:")
     __password = getpass("Please enter your password:")
 
+    # Note the SeDASBulkDownload is very chatty at debug. But if you need to know what is going on enable logging.
+    logging.basicConfig(level=logging.DEBUG)
+    _logger.setLevel(logging.DEBUG)
+
     sedas = SeDASAPI(_username, __password)
 
     print("search by aoi and sensor type...")
-    result = sedas.search(wkt, startDate, endDate, "SAR")
+    result = sedas.search_sar(wkt, startDate, endDate, sarProductType="SLC")
     print(json.dumps(result, sort_keys=True, indent=4, separators=(',', ': ')))
 
     print("single product query...")

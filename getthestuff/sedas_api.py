@@ -52,6 +52,7 @@ class SeDASAPI:
             self._token = json.load(urlopen(req))['token']
             self.headers['Authorization'] = f"Token {self._token}"
             self._token_time = time.time()
+            _logger.debug("successful login.")
         except HTTPError as e:
             # Note: This doesn't use the default error handling because that will try and log in again if you have
             # provided invalid login details and would get stuck in an infinite loop
@@ -70,6 +71,9 @@ class SeDASAPI:
     ) -> dict:
         """
         Search the SeDAS system for products with the given parameters.
+
+        For valid _filters parameters see https://geobrowser.satapps.org/docs/json_ProductFilters.html
+
         :param _wkt: wkt formatted aoi
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
@@ -96,9 +100,12 @@ class SeDASAPI:
             if self._error_handling(e) and _retry:
                 return self.search(_wkt, _start_date, _end_date, _sensor, _retry=False, **_filters)
 
-    def search_sar(self, _wkt: str, _start_date: str, _end_date: str, **_filters: dict) -> dict:
+    def search_sar(self, _wkt: str, _start_date: str, _end_date: str, **_filters) -> dict:
         """
         Search the SeDAS system for SAR products only with the given parameters
+
+        For valid _filters parameters see https://geobrowser.satapps.org/docs/json_ProductFilters.html
+
         :param _wkt: wkt formatted aoi
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
@@ -107,9 +114,12 @@ class SeDASAPI:
         """
         return self.search(_wkt, _start_date, _end_date, 'SAR', **_filters)
 
-    def search_optical(self, _wkt: str, _start_date: str, _end_date: str, **_filters: dict) -> dict:
+    def search_optical(self, _wkt: str, _start_date: str, _end_date: str, **_filters) -> dict:
         """
         Search the SeDAS system for Optical products only with the given parameters
+
+        For valid _filters parameters see https://geobrowser.satapps.org/docs/json_ProductFilters.html
+
         :param _wkt: wkt formatted aoi
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
@@ -118,7 +128,7 @@ class SeDASAPI:
         """
         return self.search(_wkt, _start_date, _end_date, 'Optical', **_filters)
 
-    def search_product(self, _product_id: str, _retry=True) -> dict:
+    def search_product(self, _product_id: str, _retry: bool = True) -> dict:
         """
         Search for information about a known product id.
         :param _product_id: product id to look for
@@ -135,7 +145,7 @@ class SeDASAPI:
             if self._error_handling(e) and _retry:
                 return self.search_product(_product_id, _retry=False)
 
-    def download(self, _product, _output_path: str, _retry=True) -> None:
+    def download(self, _product, _output_path: str, _retry: bool = True) -> None:
         """
         Download a product from sedas
         :param _product: product dictionary from a search
@@ -147,7 +157,7 @@ class SeDASAPI:
             with open(_output_path, "+wb") as f:
                 shutil.copyfileobj(resp, f)
 
-    def download_request(self, _product: dict, _retry=True):
+    def download_request(self, _product: dict, _retry: bool = True):
         """
         Download a product from sedas, returning the request object.
         Use this over the download function when you don't want the data to touch disk before you do something with it.
@@ -166,7 +176,7 @@ class SeDASAPI:
             if self._error_handling(e) and _retry:
                 return self.download_request(_product, _retry=False)
 
-    def request(self, _product, _retry=True) -> str:
+    def request(self, _product, _retry: bool = True) -> str:
         """
         Request a file from the SeDAS long term archive
         :param _product: product to request from the search
@@ -183,7 +193,7 @@ class SeDASAPI:
             if self._error_handling(e) and _retry:
                 return self.request(_product, _retry=False)
 
-    def is_request_ready(self, _request_id: str, _retry=True):
+    def is_request_ready(self, _request_id: str, _retry: bool = True):
         """
         checks on the status of a request. If it is complete it will return the download url
         :param _request_id: request id to check on.
@@ -216,4 +226,3 @@ class SeDASAPI:
         _logger.error(error)
         _logger.error(error.read().decode())
         raise error
-
