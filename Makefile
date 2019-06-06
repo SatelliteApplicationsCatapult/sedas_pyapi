@@ -43,9 +43,8 @@ clean-test: ## remove test and coverage artifacts
 	rm -f nose2-junit.xml
 
 test: ## run tests quickly with the default Python
-	python --version
+	python3 --version
 	python setup.py test
-
 
 dist: clean ## builds source and wheel package
 	python setup.py sdist
