@@ -1,4 +1,4 @@
-.PHONY: clean clean-test clean-pyc clean-build help
+.PHONY: clean clean-test clean-pyc clean-build help venv
 .DEFAULT_GOAL := help
 
 
@@ -42,18 +42,22 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 	rm -f nose2-junit.xml
 
-test: ## run tests quickly with the default Python
-	python3 --version
-	python setup.py test
+test: venv ## run tests quickly with the default Python
+	venv/bin/python --version
+	venv/bin/python setup.py test
 
-dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+dist:  venv  clean ## builds source and wheel package
+	venv/bin/python setup.py sdist
+	venv/bin/python setup.py bdist_wheel
 	ls -l dist
 
 docker: dist ## Builds docker container
 	docker build ./ -t sedas-client:latest
 	docker save -o dist/sedas-client.tar sedas-client:latest
 
-install: clean ## install the package to the active Python's site-packages
+install: clean venv  ## install the package to the active Python's site-packages
 	python setup.py install
+
+venv: setup.py
+    which virtualenv
+    test -d venv || virtualenv venv --python=python3.7
