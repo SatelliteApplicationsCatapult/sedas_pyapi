@@ -43,7 +43,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -f nose2-junit.xml
 
 test: ## run tests quickly with the default Python
-    python --version
+	python --version
 	python setup.py test
 
 
