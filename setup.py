@@ -27,7 +27,7 @@ setup(
     packages=find_packages(include=['getthestuff']),
     install_requires=requirements,
     setup_requires=[],
-    tests_require=[],
+    tests_require=['nose2', 'coverage'],
     test_suite='nose2.collector.collector',
     url='https://bitbucket.satapps.org/projects/SEN/repos/get_the_stuff',
 )

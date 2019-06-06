@@ -43,12 +43,12 @@ clean-test: ## remove test and coverage artifacts
 	rm -f nose2-junit.xml
 
 test: venv ## run tests quickly with the default Python
-	venv/bin/python --version
-	venv/bin/python setup.py test
+	venv_make/bin/python --version
+	venv_make/bin/python setup.py test
 
 dist:  venv  clean ## builds source and wheel package
-	venv/bin/python setup.py sdist
-	venv/bin/python setup.py bdist_wheel
+	venv_make/bin/python setup.py sdist
+	venv_make/bin/python setup.py bdist_wheel
 	ls -l dist
 
 docker: dist ## Builds docker container
@@ -59,5 +59,5 @@ install: clean venv  ## install the package to the active Python's site-packages
 	python setup.py install
 
 venv: setup.py
-    which virtualenv
-    test -d venv || virtualenv venv --python=python3.7
+	which virtualenv
+	virtualenv venv_make --python=python3.4
