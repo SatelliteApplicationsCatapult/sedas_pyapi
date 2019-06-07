@@ -38,7 +38,7 @@ _username = input("Please enter your username:")
 __password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(_username, __password)
-result_optical = sedas.search_optical(wkt, startDate, endDate, maxCloudPercent=50, minCloudPercent=25)
+result_optical = sedas.search_optical(wkt, startDate, endDate, maxCloudPercent=50)
 print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
 
@@ -77,7 +77,7 @@ __password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(_username, __password)
 singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
-print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')))```
+print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
 
 ### Download a single product
@@ -117,10 +117,10 @@ __password = getpass("Please enter your password:")
 sedas = SeDASAPI(_username, __password)
 
 # Search for some images.
-result_sar = sedas.search_sar(wkt, startDate, endDate)
+result_sar = sedas.search_sar(wkt, startDate, endDate, sarProductType="SLC")
 # Create a downloader. This will spawn a number of background threads to actually do the downloading
 # And waiting for historical requests.
-downloader = SeDASBulkDownload(sedas, "/output/path/", parallel=3, verbose=True)
+downloader = SeDASBulkDownload(sedas, "/output/path/", parallel=3)
 
 # Add the things we want to download to the queue
 downloader.add(result_sar['products'])

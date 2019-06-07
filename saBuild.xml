@@ -1,7 +1,7 @@
 <project>
   <groupId>org.catapult.sa</groupId>
   <artifactId>getthestuff-%-py3-none-any.whl</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
   <packaging>whl</packaging>
   <name>getthestuff</name>
   <description>client library to easily access the SeDAS API</description>
