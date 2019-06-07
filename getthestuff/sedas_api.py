@@ -51,7 +51,7 @@ class SeDASAPI:
             resp = json.load(urlopen(req))
             self._token = resp['token']
             self.headers['Authorization'] = f"Token {self._token}"
-            self._token_time = datetime.datetime.strptime(resp['validUntil'], "%Y-%m-%dT%H:%M:%S%Z") - \
+            self._token_time = datetime.datetime.strptime(resp['validUntil'], "%Y-%m-%dT%H:%M:%SZ") - \
                 datetime.timedelta(minutes=5)  # knock five minutes off so we log in before we need to.
             _logger.debug("successful login.")
         except HTTPError as e:
