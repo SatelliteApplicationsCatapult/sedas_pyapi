@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 import shutil
@@ -20,8 +21,6 @@ class SeDASAPI:
     search_url = f"{base_url}search"
     headers = {"Content-Type": "application/json", "Authorization": None}
 
-    token_time_out = 60 * 20  # 20 minutes
-
     _token = None
     _token_time = None
 
@@ -38,7 +37,7 @@ class SeDASAPI:
         """
         # if we already have a token and it is not likely to have expired yet we can skip the rest
         # of the login process
-        if self._token and (self._token_time and time.time() - self._token_time < self.token_time_out):
+        if self._token and (self._token_time and datetime.datetime.now() > self._token_time):
             return
 
         data = {'username': self._username, 'password': self.__password}
@@ -49,9 +48,11 @@ class SeDASAPI:
             headers={"Content-Type": "application/json"}
         )
         try:
-            self._token = json.load(urlopen(req))['token']
+            resp = json.load(urlopen(req))
+            self._token = resp['token']
             self.headers['Authorization'] = f"Token {self._token}"
-            self._token_time = time.time()
+            self._token_time = datetime.datetime.strptime(resp['validUntil'], "%Y-%m-%dT%H:%M:%S%Z") - \
+                datetime.timedelta(minutes=5)  # knock five minutes off so we log in before we need to.
             _logger.debug("successful login.")
         except HTTPError as e:
             # Note: This doesn't use the default error handling because that will try and log in again if you have
