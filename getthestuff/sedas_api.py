@@ -2,7 +2,6 @@ import datetime
 import json
 import logging
 import shutil
-import time
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
@@ -39,6 +38,10 @@ class SeDASAPI:
         # of the login process
         if self._token and (self._token_time and datetime.datetime.now() > self._token_time):
             return
+
+        # check that the username and password have been set.
+        if not self._username or not self.__password:
+            raise ValueError("username and password must not be blank")
 
         data = {'username': self._username, 'password': self.__password}
 
