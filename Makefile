@@ -13,7 +13,7 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-all: clean build test docker
+all: clean build test dist
 
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
@@ -49,10 +49,6 @@ dist:  venv  clean ## builds source and wheel package
 	venv_make/bin/python setup.py sdist
 	venv_make/bin/python setup.py bdist_wheel
 	ls -l dist
-
-docker: dist ## Builds docker container
-	docker build ./ -t sedas-client:latest
-	docker save -o dist/sedas-client.tar sedas-client:latest
 
 install: clean venv  ## install the package to the active Python's site-packages
 	python setup.py install
