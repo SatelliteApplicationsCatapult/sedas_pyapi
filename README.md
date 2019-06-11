@@ -15,6 +15,22 @@ pip install dist/getthestuff-0.1.0_SNAPSHOT-py3-none-any.whl
 
 Soon we should have a copy of this in PyPI so you will be able to list it as a dependency.
 
+## Usage
+
+Create an instance of `getthestuff.sedas_api.SeDASAPI` passing in your username and password.
+
+Then call `search_optical`, `search_sar` or `search_product` to find the details of a product.
+
+Once you have a list of things you want to download you can use the `getthestuff.buil_download.SeDASBulkDownload` to 
+download all of them. There are also download methods on the `SeDASAPI` if you need to do something a bit different.
+
+Due to the way the SeDAS system works sometimes when you do a search you will not get a download url in the result 
+object. If this happens it means that the data is available but in the long term archive (lta) and must be requested 
+first. Use the `request` and `is_request_ready` methods to make a request and then wait for it to be fulfilled. If you 
+use the `SeDASBulkDownload` this will take care of LTA requests for you.
+
+For more details see the examples below
+
 ## Examples
 
 ### Creating a client
@@ -137,8 +153,8 @@ sedas = SeDASAPI(_username, __password)
 
 # Search for some images.
 result_sar = sedas.search_sar(wkt, startDate, endDate, sarProductType="SLC")
-# Create a downloader. This will spawn a number of background threads to actually do the downloading
-# And waiting for historical requests.
+# Create a downloader. This will spawn a number of background threads to actually do the downloading and waiting for 
+# the long term archive requests.
 downloader = SeDASBulkDownload(sedas, "/output/path/", parallel=3)
 
 # Add the things we want to download to the queue

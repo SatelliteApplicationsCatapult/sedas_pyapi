@@ -126,7 +126,10 @@ class SeDASBulkDownload:
 
 if __name__ == '__main__':
     """
-    The following is an example of 
+    The following is an example of searching and then downloading a selection of images over an aoi.
+    
+    It will print out the search result objects as it goes.
+    Logging is set to debug so it will be very chatty, but this gives a better idea around what is going on.
     """
     wkt = "POLYGON ((-1.32956397342894 51.5881719478951," \
           "-1.30138872523889 51.5872200814022," \

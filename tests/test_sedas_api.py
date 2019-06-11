@@ -12,3 +12,19 @@ class TestSeDASAPI(unittest.TestCase):
             "bogus",
             "arewyt qu3herilsuhfgloiheloixyhgndikukxjfglzwothis is not a real password"
         )
+
+    def test_blank_username(self):
+        self.assertRaises(
+            ValueError,
+            SeDASAPI,
+            "",
+            "is not a real password"
+        )
+
+    def test_blank_password(self):
+        self.assertRaises(
+            ValueError,
+            SeDASAPI,
+            "is not a real username",
+            ""
+        )
