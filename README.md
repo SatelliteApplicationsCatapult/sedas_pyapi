@@ -168,18 +168,3 @@ while not downloader.is_done():
 downloader.shutdown()
 
 ```
-
-### Docker environment
-
-A simple docker environment is provided. This is probably not all that useful yet. 
-Run the following commands from this directory:
-
-```shell
-make docker
-docker run -it sedas-client:latest /bin/bash
-```
-
-This assumes you have docker installed. It will leave you in a shell which has all the tools defined in the docker file 
-installed.
-
-Extra tools required will happily be added just make a request. 
