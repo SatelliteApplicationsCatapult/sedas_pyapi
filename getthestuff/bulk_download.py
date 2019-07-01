@@ -29,6 +29,7 @@ class SeDASBulkDownload:
         self._shut_down = False  # should this downloader shutdown at the next safe point.
         self._requested_thread = None
         self._download_threads = []
+        self._monitor_thread = None
         self._parallel = parallel
         self._current_downloads = 0  # Number of currently in progress downloads.
 
@@ -48,10 +49,13 @@ class SeDASBulkDownload:
         self._requested_thread.start()
 
         for i in range(self._parallel):
-            t = threading.Thread(target=self._downloads, args=())
-            t.daemon = True
-            t.start()
-            self._download_threads.append(t)
+            self._download_threads.append(threading.Thread(target=self._downloads, args=()))
+            self._download_threads[i].daemon = True
+            self._download_threads[i].start()
+
+        self._monitor_thread = threading.Thread(target=self._monitor, args=())
+        self._monitor_thread.daemon = True
+        self._monitor_thread.start()
 
     def shutdown(self) -> None:
         """
@@ -86,6 +90,18 @@ class SeDASBulkDownload:
                     self._pending_request_ids.append(request_id)
                     self._pending_products[request_id] = product
 
+    def _monitor(self) -> None:
+        """
+        A monitor thread to log download and request progress.
+        :return:
+        """
+        while not self._shut_down:
+            _logger.info(f"{self._pending_download.qsize()} downloads pending, "
+                         f"{self._current_downloads} downloads in progress, "
+                         f"{len(self._pending_products)} requests pending")
+
+            time.sleep(5)
+
     def _requests(self) -> None:
         """
         Thread function to keep an eye on the pending requests and move them to the download queue when they are ready
@@ -99,8 +115,7 @@ class SeDASBulkDownload:
                 _logger.debug(f"checking state of request {request_id} for {product['supplierId']}")
                 download_url = self._client.is_request_ready(request_id)
                 if download_url:
-                    _logger.debug(f"request {request_id} COMPLETE for {product['supplierId']}")
-                    _logger.debug(f"Adding {product['supplierId']} to download queue")
+                    _logger.info(f"Request {request_id} COMPLETE for {product['supplierId']}")
                     product['downloadUrl'] = download_url
                     self._pending_download.put(product)
                     del self._pending_products[request_id]
@@ -112,16 +127,18 @@ class SeDASBulkDownload:
         :return: None
         """
         while not self._shut_down:
+            time.sleep(1)
             _logger.debug(f"{self._pending_download.qsize()} downloads pending")
             try:
                 pending = self._pending_download.get()
                 self._current_downloads = self._current_downloads + 1
                 name = os.path.join(self._prefix, pending['supplierId'] + '.zip')
-                _logger.debug(f"downloading {pending['supplierId']} to {name}")
+                _logger.info(f"downloading {pending['supplierId']} to {name}")
                 self._client.download(pending, name)
                 self._current_downloads = self._current_downloads - 1
             except queue.Empty:
                 time.sleep(1)
+        print("download thread stopping")
 
 
 if __name__ == '__main__':
