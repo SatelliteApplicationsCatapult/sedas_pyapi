@@ -11,19 +11,20 @@ with open('HISTORY.md') as history_file:
 requirements = []
 
 setup(
-    author="Wil Selwood",
-    author_email="wil.selwood@sa.catapult.org.uk",
+    author='Wil Selwood',
+    author_email='wil.selwood@sa.catapult.org.uk',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Programming Language :: Python :: 3.7',
     ],
-    description="client library to easily access the SeDAS API",
+    description='client library to easily access the SeDAS API',
     long_description=readme + '\n\n' + history,
     version='0.1.0',
     keywords='SeDAS API Client',
     name='getthestuff',
+    license='apache2',
     packages=find_packages(include=['getthestuff']),
     install_requires=requirements,
     setup_requires=[],

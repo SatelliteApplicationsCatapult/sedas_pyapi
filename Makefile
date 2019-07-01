@@ -26,8 +26,8 @@ clean-build: ## remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
-	find . -name '*.egg-info' -not -path './venv/*' -exec rm -fr {} +
-	find . -name '*.egg' -not -path './venv/*' -exec rm -f {} +
+	find . -name '*.egg-info' -not -path './venv-make/*' -exec rm -fr {} +
+	find . -name '*.egg' -not -path './venv-make/*' -exec rm -f {} +
 
 clean-pyc: ## remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
