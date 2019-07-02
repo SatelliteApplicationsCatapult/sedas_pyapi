@@ -166,11 +166,11 @@ if __name__ == '__main__':
     It will print out the search result objects as it goes.
     Logging is set to debug so it will be very chatty, but this gives a better idea around what is going on.
     """
-    wkt = "POLYGON ((-1.32956397342894 51.5881719478951," \
-          "-1.30138872523889 51.5872200814022," \
-          "-1.30208676066703 51.5621542637557," \
-          "-1.33007163555849 51.5622177215219," \
-          "-1.32956397342894 51.5881719478951))"
+    wkt = "POLYGON ((-1.3295 51.5881," \
+          "-1.3013 51.5872," \
+          "-1.3020 51.5621," \
+          "-1.3300 51.5622," \
+          "-1.3295 51.5881))"
     startDate = "2019-04-30T00:00:00Z"
     endDate = "2019-05-12T23:59:59Z"
 
