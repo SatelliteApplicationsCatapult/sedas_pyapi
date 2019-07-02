@@ -127,7 +127,7 @@ __password = getpass("Please enter your password:")
 sedas = SeDASAPI(_username, __password)
 singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
 
-sedas.download(singleProduct[0], "/output/path/")
+sedas.download(singleProduct[0], "/output/path/S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F.zip")
 ```
 
 ### Bulk download many products
