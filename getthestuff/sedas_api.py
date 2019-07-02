@@ -225,7 +225,7 @@ class SeDASAPI:
         req = Request(url, headers=self.headers)
         try:
             decoded = json.load(urlopen(req))
-            if len(decoded) > 1 and 'downloadUrl' in decoded[0]:
+            if len(decoded) >= 1 and 'downloadUrl' in decoded[0]:
                 return decoded[0]['downloadUrl']
             return None
         except HTTPError as e:

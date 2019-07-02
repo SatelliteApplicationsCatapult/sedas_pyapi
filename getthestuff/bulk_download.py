@@ -117,6 +117,7 @@ class SeDASBulkDownload:
                          f"{len(self._pending_products)} requests pending")
 
             time.sleep(5)
+        _logger.debug("monitor thread stopping")
 
     def _requests(self) -> None:
         """
@@ -136,6 +137,7 @@ class SeDASBulkDownload:
                     self._pending_download.put(product)
                     del self._pending_products[request_id]
                     self._pending_request_ids.remove(request_id)
+        _logger.debug("requests thread stopping")
 
     def _downloads(self) -> None:
         """
@@ -154,7 +156,7 @@ class SeDASBulkDownload:
                 self._current_downloads = self._current_downloads - 1
             except queue.Empty:
                 time.sleep(1)
-        print("download thread stopping")
+        _logger.debug("download thread stopping")
 
 
 if __name__ == '__main__':
