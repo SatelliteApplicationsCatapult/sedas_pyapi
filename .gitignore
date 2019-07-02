@@ -1,2 +1,9 @@
 venv/
+venv_make/
+.eggs/
 .idea/
+__pycache__/
+*.egg-info/
+dist/
+build/
+nose2-junit.xml
