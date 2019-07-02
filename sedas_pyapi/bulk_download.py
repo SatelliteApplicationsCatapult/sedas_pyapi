@@ -22,7 +22,7 @@ import time
 from getpass import getpass
 import json
 
-from getthestuff.sedas_api import SeDASAPI
+from sedas_pyapi.sedas_api import SeDASAPI
 
 _logger = logging.getLogger("bulk_downloader")
 

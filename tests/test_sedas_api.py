@@ -17,7 +17,7 @@ Copyright 2019 Satellite Applications Catapult
 import unittest
 from urllib.error import HTTPError
 
-from getthestuff.sedas_api import SeDASAPI
+from sedas_pyapi.sedas_api import SeDASAPI
 
 
 class TestSeDASAPI(unittest.TestCase):
@@ -26,7 +26,7 @@ class TestSeDASAPI(unittest.TestCase):
             HTTPError,
             SeDASAPI,
             "bogus",
-            "arewyt qu3herilsuhfgloiheloixyhgndikukxjfglzwothis is not a real password"
+            "arewyt qu3herilsuhfgloiheloixyhgndikukxjfglzwo this is not a real password"
         )
 
     def test_blank_username(self):
