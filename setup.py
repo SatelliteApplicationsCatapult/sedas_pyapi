@@ -30,5 +30,5 @@ setup(
     setup_requires=[],
     tests_require=['nose2', 'coverage'],
     test_suite='nose2.collector.collector',
-    url='https://bitbucket.satapps.org/projects/SEN/repos/get_the_stuff',
+    url='https://github.com/SatelliteApplicationsCatapult/sedas_pyapi',
 )
