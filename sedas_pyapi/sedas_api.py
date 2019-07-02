@@ -239,10 +239,24 @@ class SeDASAPI:
         :return: true if this error can be recovered by logging in again.
         """
         # if we have an authentication error try and login again and then try again.
-        if error.code == 403 or error.code == 401:
+        if _is_token_error(error):
             self._token = None
             self.login()
             return True
+
         _logger.error(error)
         _logger.error(error.read().decode())
         raise error
+
+
+def _is_token_error(error: HTTPError) -> bool:
+    """
+    Return true if this HTTPError is a token error.
+    :param error: the error to check on
+    :return: True if the error relates to a token error.
+    """
+    if error.code == 403 or error.code == 401:
+        return True
+    if error.code == 400 and error.message == "User token does not exist":
+        return True
+    return False
