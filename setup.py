@@ -14,7 +14,7 @@ setup(
     author='Wil Selwood',
     author_email='wil.selwood@sa.catapult.org.uk',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Programming Language :: Python :: 3.7',
@@ -22,7 +22,7 @@ setup(
     description='client library to easily access the SeDAS API',
     long_description=readme + '\n\n' + history,
     long_description_content_type="text/markdown",
-    version='0.2.0',
+    version='0.2.1',
     keywords='SeDAS API Client',
     name='sedas_pyapi',
     license='apache2',
