@@ -1,5 +1,9 @@
 # History
 
+## 0.3.0 (2019-07-11)
+* Add Source Group search parameter
+* Add Satellite Name search parameter
+
 ## 0.2.1 (2019-07-03)
 * Documentation updates
 * download done queue added to bulk downloader
