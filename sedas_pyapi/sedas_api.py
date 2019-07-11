@@ -132,7 +132,7 @@ class SeDASAPI:
                     **_filters
                 )
 
-    def search_sar(self, _wkt: str, _start_date: str, _end_date: str, _satellite_name="", **_filters) -> dict:
+    def search_sar(self, _wkt: str, _start_date: str, _end_date: str, _satellite_name: str, **_filters) -> dict:
         """
         Search the SeDAS system for SAR products only with the given parameters
 
@@ -147,7 +147,7 @@ class SeDASAPI:
         """
         return self.search(_wkt, _start_date, _end_date, 'SAR', _satellite_name=_satellite_name, **_filters)
 
-    def search_optical(self, _wkt: str, _start_date: str, _end_date: str, _satellite_name="", **_filters) -> dict:
+    def search_optical(self, _wkt: str, _start_date: str, _end_date: str, _satellite_name: str, **_filters) -> dict:
         """
         Search the SeDAS system for Optical products only with the given parameters
 
