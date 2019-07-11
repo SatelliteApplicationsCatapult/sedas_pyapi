@@ -88,6 +88,7 @@ class SeDASAPI:
             _sensor: str = 'All',
             _retry: bool = True,
             _satellite_name="",
+            _source_group="",
             **_filters
     ) -> dict:
         """
@@ -101,6 +102,7 @@ class SeDASAPI:
         :param _sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
         :param _retry: should the request be retried if it fails.
         :param _satellite_name: name of the satellite to search
+        :param _source_group: name of the source group to search
         :param _filters: filter search on
         :return: list of search results
         """
@@ -115,6 +117,9 @@ class SeDASAPI:
         }
         if _satellite_name:
             query['satelliteName'] = _satellite_name
+
+        if _source_group:
+            query['sourceGroup'] = _source_group
 
         req = Request(self.search_url, json.dumps(query).encode(), headers=self.headers)
         try:
@@ -132,7 +137,15 @@ class SeDASAPI:
                     **_filters
                 )
 
-    def search_sar(self, _wkt: str, _start_date: str, _end_date: str, _satellite_name: str, **_filters) -> dict:
+    def search_sar(
+            self,
+            _wkt: str,
+            _start_date: str,
+            _end_date: str,
+            _satellite_name: str,
+            _source_group: str,
+            **_filters
+    ) -> dict:
         """
         Search the SeDAS system for SAR products only with the given parameters
 
@@ -142,12 +155,29 @@ class SeDASAPI:
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
         :param _satellite_name: name of the satellite to search
+        :param _source_group: name of the source group to search
         :param _filters: filter search on
         :return: list of search results
         """
-        return self.search(_wkt, _start_date, _end_date, 'SAR', _satellite_name=_satellite_name, **_filters)
+        return self.search(
+            _wkt,
+            _start_date,
+            _end_date,
+            'SAR',
+            _satellite_name=_satellite_name,
+            _source_group=_source_group,
+            **_filters
+        )
 
-    def search_optical(self, _wkt: str, _start_date: str, _end_date: str, _satellite_name: str, **_filters) -> dict:
+    def search_optical(
+            self,
+            _wkt: str,
+            _start_date: str,
+            _end_date: str,
+            _satellite_name: str,
+            _source_group: str,
+            **_filters
+    ) -> dict:
         """
         Search the SeDAS system for Optical products only with the given parameters
 
@@ -157,10 +187,19 @@ class SeDASAPI:
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
         :param _satellite_name: name of the satellite to search
+        :param _source_group: name of the source group to search
         :param _filters: filter search on
         :return: list of search results
         """
-        return self.search(_wkt, _start_date, _end_date, 'Optical', _satellite_name=_satellite_name, **_filters)
+        return self.search(
+            _wkt,
+            _start_date,
+            _end_date,
+            'Optical',
+            _satellite_name=_satellite_name,
+            _source_group=_source_group,
+            **_filters
+        )
 
     def search_product(self, _product_id: str, _retry: bool = True) -> dict:
         """
