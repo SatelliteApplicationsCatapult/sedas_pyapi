@@ -98,10 +98,54 @@ print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 
 Returns a SeDAS search result object. [See more](https://geobrowser.satapps.org/docs/json_SearchResponse.html)
 
-### Filtering on a group of satellites
+### List the source groups available to the user
 
-Possible filter groups for all users are: 'S1' and 'AIRSAR'.
-Additionally, if you have been approved for SSGP access you can filter on: 'Cosmo-SkyMed', 'SPOT' and 'Pleiades'.
+```python
+import json
+from sedas_pyapi.sedas_api import SeDASAPI
+from getpass import getpass
+
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
+
+sedas = SeDASAPI(username, password)
+result_groups = sedas.list_sensor_groups()
+print(json.dumps(result_groups, sort_keys=True, indent=4, separators=(',', ': ')))
+
+groups = []
+for i in range(0, len(result_groups)):
+    groups.append(result_groups[i]['name'])
+
+print(f"Available groups are: {', '.join(groups)}")
+```
+
+Returns a list of SeDAS source group objects. [See more](https://geobrowser.satapps.org/docs/json_SourceGroup.html)
+
+### List the satellites available to the user
+
+```python
+import json
+from sedas_pyapi.sedas_api import SeDASAPI
+from getpass import getpass
+
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
+
+sedas = SeDASAPI(username, password)
+result_sats = sedas.list_satellites()
+print(json.dumps(result_sats, sort_keys=True, indent=4, separators=(',', ': ')))
+
+satellites = []
+for i in range(0, len(result_sats)):
+    satellites.append(result_sats[i]['name'])
+
+print(f"Available satellites are: {', '.join(satellites)}")
+```
+
+Returns a list of SeDAS satellite objects. [See more](https://geobrowser.satapps.org/docs/json_Satellite.html)
+
+### Filtering on a group of sources
+Use sedas.list_sensor_groups to get the list of source groups available for a user.
 
 ```python
 import json
@@ -125,9 +169,7 @@ print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': '
 ```
 
 ### Filtering on a specific satellite
-
-Possible satellites for all users are: 'Sentinel-1A', 'Sentinel-1B', 'Sentinel-2A', 'Sentinel-2B' and 'AIRSAR'.
-Additionally, if you have been approved for SSGP access you can filter on: 'Cosmo-SkyMed-1', 'Cosmo-SkyMed-2', 'Cosmo-SkyMed-3', 'Cosmo-SkyMed-4', 'SPOT-6', 'SPOT-7', 'Pleiades-1A' and 'Pleiades-1B'.
+Use sedas.list_satellites to get the list of satellites available for a user.
 
 ```python
 import json
