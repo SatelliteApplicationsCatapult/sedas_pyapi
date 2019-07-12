@@ -87,8 +87,8 @@ class SeDASAPI:
             _end_date: str,
             _sensor: str = 'All',
             _retry: bool = True,
-            _satellite_name="",
-            _source_group="",
+            _satellite_name: str = "",
+            _source_group: str = "",
             **_filters
     ) -> dict:
         """
@@ -142,8 +142,8 @@ class SeDASAPI:
             _wkt: str,
             _start_date: str,
             _end_date: str,
-            _satellite_name: str,
-            _source_group: str,
+            _satellite_name: str = "",
+            _source_group: str = "",
             **_filters
     ) -> dict:
         """
@@ -174,8 +174,8 @@ class SeDASAPI:
             _wkt: str,
             _start_date: str,
             _end_date: str,
-            _satellite_name: str,
-            _source_group: str,
+            _satellite_name: str = "",
+            _source_group: str = "",
             **_filters
     ) -> dict:
         """
