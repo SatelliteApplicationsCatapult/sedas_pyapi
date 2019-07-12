@@ -29,16 +29,18 @@ _logger = logging.getLogger("bulk_downloader")
 
 class SeDASBulkDownload:
 
-    def __init__(self, sedas_client: SeDASAPI, download_prefix: str, parallel=2):
+    def __init__(self, sedas_client: SeDASAPI, download_prefix: str, parallel=2, done_queue: queue.Queue = None):
         """
         create a new SeDASBulkDownloader
         :param sedas_client: the client to use for downloading
         :param download_prefix: where to download the files to.
         :param parallel: the number of download threads to use. There will always be one request thread.
-        :param verbose: enable printing of current working state to stdout.
+        :param done_queue: a queue which completed downloads will be added to. Allows other parts of the program to be
+                           notified when a download completes.
         """
         self._client = sedas_client
         self._prefix = download_prefix
+        self._done_queue = done_queue
         self._pending_download = queue.Queue()  # products ready to download.
         self._pending_request_ids = []  # list of request ids that are currently pending
         self._pending_products = {}  # maps request id to product object
@@ -154,6 +156,8 @@ class SeDASBulkDownload:
                 _logger.info(f"downloading {pending['supplierId']} to {name}")
                 self._client.download(pending, name)
                 self._current_downloads = self._current_downloads - 1
+                if self._done_queue:
+                    self._done_queue.put({'search': pending, 'path': name})
             except queue.Empty:
                 time.sleep(1)
         _logger.debug("download thread stopping")
@@ -195,9 +199,15 @@ if __name__ == '__main__':
 
     print("Downloading results of aoi search...")
 
-    downloader = SeDASBulkDownload(sedas, output_path, parallel=3)
+    done_queue = queue.Queue()
+
+    downloader = SeDASBulkDownload(sedas, output_path, parallel=3, done_queue=done_queue)
     downloader.add(result['products'])
     while not downloader.is_done():
-        time.sleep(5)
+        try:
+            completed = done_queue.get()
+            print(completed)
+        except queue.Empty:
+            time.sleep(5)
     downloader.shutdown()
     print("Download complete!")

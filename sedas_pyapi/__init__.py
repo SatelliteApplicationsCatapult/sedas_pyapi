@@ -16,4 +16,4 @@ Copyright 2019 Satellite Applications Catapult
 
 __author__ = """Wil Selwood"""
 __email__ = 'wil.selwood@sa.catapult.org.uk'
-__version__ = '0.1.0'
+__version__ = '0.2.1'

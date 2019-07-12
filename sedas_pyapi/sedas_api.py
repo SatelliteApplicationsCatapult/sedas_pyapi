@@ -87,6 +87,8 @@ class SeDASAPI:
             _end_date: str,
             _sensor: str = 'All',
             _retry: bool = True,
+            _satellite_name="",
+            _source_group="",
             **_filters
     ) -> dict:
         """
@@ -99,6 +101,8 @@ class SeDASAPI:
         :param _end_date: end date of search in ISO8601 format
         :param _sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
         :param _retry: should the request be retried if it fails.
+        :param _satellite_name: name of the satellite to search
+        :param _source_group: name of the source group to search
         :param _filters: filter search on
         :return: list of search results
         """
@@ -111,6 +115,11 @@ class SeDASAPI:
             'start': _start_date,
             'stop': _end_date
         }
+        if _satellite_name:
+            query['satelliteName'] = _satellite_name
+
+        if _source_group:
+            query['sourceGroup'] = _source_group
 
         req = Request(self.search_url, json.dumps(query).encode(), headers=self.headers)
         try:
@@ -118,9 +127,25 @@ class SeDASAPI:
             return json.load(resp)
         except HTTPError as e:
             if self._error_handling(e) and _retry:
-                return self.search(_wkt, _start_date, _end_date, _sensor, _retry=False, **_filters)
+                return self.search(
+                    _wkt,
+                    _start_date,
+                    _end_date,
+                    _sensor,
+                    _retry=False,
+                    _satellite_name=_satellite_name,
+                    **_filters
+                )
 
-    def search_sar(self, _wkt: str, _start_date: str, _end_date: str, **_filters) -> dict:
+    def search_sar(
+            self,
+            _wkt: str,
+            _start_date: str,
+            _end_date: str,
+            _satellite_name: str,
+            _source_group: str,
+            **_filters
+    ) -> dict:
         """
         Search the SeDAS system for SAR products only with the given parameters
 
@@ -129,12 +154,30 @@ class SeDASAPI:
         :param _wkt: wkt formatted aoi
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
+        :param _satellite_name: name of the satellite to search
+        :param _source_group: name of the source group to search
         :param _filters: filter search on
         :return: list of search results
         """
-        return self.search(_wkt, _start_date, _end_date, 'SAR', **_filters)
+        return self.search(
+            _wkt,
+            _start_date,
+            _end_date,
+            'SAR',
+            _satellite_name=_satellite_name,
+            _source_group=_source_group,
+            **_filters
+        )
 
-    def search_optical(self, _wkt: str, _start_date: str, _end_date: str, **_filters) -> dict:
+    def search_optical(
+            self,
+            _wkt: str,
+            _start_date: str,
+            _end_date: str,
+            _satellite_name: str,
+            _source_group: str,
+            **_filters
+    ) -> dict:
         """
         Search the SeDAS system for Optical products only with the given parameters
 
@@ -143,10 +186,20 @@ class SeDASAPI:
         :param _wkt: wkt formatted aoi
         :param _start_date: start date of search in ISO8601 format
         :param _end_date: end date of search in ISO8601 format
+        :param _satellite_name: name of the satellite to search
+        :param _source_group: name of the source group to search
         :param _filters: filter search on
         :return: list of search results
         """
-        return self.search(_wkt, _start_date, _end_date, 'Optical', **_filters)
+        return self.search(
+            _wkt,
+            _start_date,
+            _end_date,
+            'Optical',
+            _satellite_name=_satellite_name,
+            _source_group=_source_group,
+            **_filters
+        )
 
     def search_product(self, _product_id: str, _retry: bool = True) -> dict:
         """
@@ -239,10 +292,24 @@ class SeDASAPI:
         :return: true if this error can be recovered by logging in again.
         """
         # if we have an authentication error try and login again and then try again.
-        if error.code == 403 or error.code == 401:
+        if _is_token_error(error):
             self._token = None
             self.login()
             return True
+
         _logger.error(error)
         _logger.error(error.read().decode())
         raise error
+
+
+def _is_token_error(error: HTTPError) -> bool:
+    """
+    Return true if this HTTPError is a token error.
+    :param error: the error to check on
+    :return: True if the error relates to a token error.
+    """
+    if error.code == 403 or error.code == 401:
+        return True
+    if error.code == 400 and hasattr(error, 'message') and error.message == "User token does not exist":
+        return True
+    return False
