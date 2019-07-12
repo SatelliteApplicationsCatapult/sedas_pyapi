@@ -235,6 +235,22 @@ class SeDASAPI:
             if self._error_handling(e) and retry:
                 return self.list_sensor_groups(retry=False)
 
+    def list_satellites(self, retry: bool = True) -> dict:
+        """
+        Search for information about available satellites.
+        :param retry: Should the request be retried on error.
+        :return: search result dictionary
+        """
+        self.login()
+        url = f"{self.sensor_url}/satellites"
+        req = Request(url, headers=self.headers)
+        try:
+            with urlopen(req) as resp:
+                return json.load(resp)
+        except HTTPError as e:
+            if self._error_handling(e) and retry:
+                return self.list_satellites(retry=False)
+
     def download(self, _product, _output_path: str, _retry: bool = True) -> None:
         """
         Download a product from sedas

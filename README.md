@@ -121,6 +121,29 @@ print(f"Available groups are: {', '.join(groups)}")
 
 Returns a list of SeDAS source group objects. [See more](https://geobrowser.satapps.org/docs/json_SourceGroup.html)
 
+### List the satellites available to the user
+
+```python
+import json
+from sedas_pyapi.sedas_api import SeDASAPI
+from getpass import getpass
+
+_username = input("Please enter your username:")
+__password = getpass("Please enter your password:")
+
+sedas = SeDASAPI(_username, __password)
+result_sats = sedas.list_satellites()
+print(json.dumps(result_sats, sort_keys=True, indent=4, separators=(',', ': ')))
+
+satellites = []
+for i in range(0, len(result_sats)):
+    satellites.append(result_sats[i]['name'])
+
+print(f"Available satellites are: {', '.join(satellites)}")
+```
+
+Returns a list of SeDAS source group objects. [See more](https://geobrowser.satapps.org/docs/json_SourceGroup.html)
+
 ### Filtering on a group of sources
 Use sedas.list_sensor_groups to get the list of source groups available for a user.
 
@@ -146,9 +169,7 @@ print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': '
 ```
 
 ### Filtering on a specific satellite
-
-Possible satellites for all users are: 'Sentinel-1A', 'Sentinel-1B', 'Sentinel-2A', 'Sentinel-2B' and 'AIRSAR'.
-Additionally, if you have been approved for SSGP access you can filter on: 'Cosmo-SkyMed-1', 'Cosmo-SkyMed-2', 'Cosmo-SkyMed-3', 'Cosmo-SkyMed-4', 'SPOT-6', 'SPOT-7', 'Pleiades-1A' and 'Pleiades-1B'.
+Use sedas.list_sensor_groups to get the list of satellites available for a user.
 
 ```python
 import json
