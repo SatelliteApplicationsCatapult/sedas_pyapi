@@ -67,7 +67,7 @@ _username = input("Please enter your username:")
 __password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(_username, __password)
-result_optical = sedas.search_optical(wkt, startDate, endDate, maxCloudPercent=50)
+result_optical = sedas.search_optical(wkt, startDate, endDate, "", "", maxCloudPercent=50)
 print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
 
@@ -92,7 +92,7 @@ _username = input("Please enter your username:")
 __password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(_username, __password)
-result_sar = sedas.search_sar(wkt, startDate, endDate)
+result_sar = sedas.search_sar(wkt, startDate, endDate, "", "")
 print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
 
@@ -152,7 +152,7 @@ __password = getpass("Please enter your password:")
 sedas = SeDASAPI(_username, __password)
 
 # Search for some images.
-result_sar = sedas.search_sar(wkt, startDate, endDate, sarProductType="SLC")
+result_sar = sedas.search_sar(wkt, startDate, endDate, "", "", sarProductType="SLC")
 # Create a downloader. This will spawn a number of background threads to actually do the downloading and waiting for 
 # the long term archive requests.
 downloader = SeDASBulkDownload(sedas, "/output/path/", parallel=3)
