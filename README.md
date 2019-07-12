@@ -142,7 +142,7 @@ for i in range(0, len(result_sats)):
 print(f"Available satellites are: {', '.join(satellites)}")
 ```
 
-Returns a list of SeDAS source group objects. [See more](https://geobrowser.satapps.org/docs/json_SourceGroup.html)
+Returns a list of SeDAS satellite objects. [See more](https://geobrowser.satapps.org/docs/json_Satellite.html)
 
 ### Filtering on a group of sources
 Use sedas.list_sensor_groups to get the list of source groups available for a user.
@@ -169,7 +169,7 @@ print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': '
 ```
 
 ### Filtering on a specific satellite
-Use sedas.list_sensor_groups to get the list of satellites available for a user.
+Use sedas.list_satellites to get the list of satellites available for a user.
 
 ```python
 import json
