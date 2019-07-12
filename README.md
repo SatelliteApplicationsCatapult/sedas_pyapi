@@ -105,10 +105,10 @@ import json
 from sedas_pyapi.sedas_api import SeDASAPI
 from getpass import getpass
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 result_groups = sedas.list_sensor_groups()
 print(json.dumps(result_groups, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -128,10 +128,10 @@ import json
 from sedas_pyapi.sedas_api import SeDASAPI
 from getpass import getpass
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 result_sats = sedas.list_satellites()
 print(json.dumps(result_sats, sort_keys=True, indent=4, separators=(',', ': ')))
 
