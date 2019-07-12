@@ -40,10 +40,10 @@ from sedas_pyapi.sedas_api import SeDASAPI
 from getpass import getpass
 
 # This is a suggestion for how to get your username and password
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 ```
 
 The SeDASAPI object can then be used to access the rest of the api.
@@ -63,10 +63,10 @@ wkt = "POLYGON ((-1.3295 51.5881," \
 startDate = "2019-04-30T00:00:00Z"
 endDate = "2019-05-12T23:59:59Z"
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 result_optical = sedas.search_optical(wkt, startDate, endDate, maxCloudPercent=50)
 print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -88,10 +88,10 @@ wkt = "POLYGON ((-1.3295 51.5881," \
 startDate = "2019-04-30T00:00:00Z"
 endDate = "2019-05-12T23:59:59Z"
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 result_sar = sedas.search_sar(wkt, startDate, endDate)
 print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -160,11 +160,11 @@ wkt = "POLYGON ((-1.3295 51.5881," \
 startDate = "2019-04-30T00:00:00Z"
 endDate = "2019-05-12T23:59:59Z"
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
-result_optical = sedas.search_optical(wkt, startDate, endDate, _source_group="S2")
+sedas = SeDASAPI(username, password)
+result_optical = sedas.search_optical(wkt, startDate, endDate, source_group="S2")
 print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
 
@@ -184,11 +184,11 @@ wkt = "POLYGON ((-1.3295 51.5881," \
 startDate = "2019-04-30T00:00:00Z"
 endDate = "2019-05-12T23:59:59Z"
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
-result_sar = sedas.search_sar(wkt, startDate, endDate, _satellite_name="Sentinel-1A")
+sedas = SeDASAPI(username, password)
+result_sar = sedas.search_sar(wkt, startDate, endDate, satellite_name="Sentinel-1A")
 print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
 
@@ -199,10 +199,10 @@ import json
 from sedas_pyapi.sedas_api import SeDASAPI
 from getpass import getpass
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
 print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -215,10 +215,10 @@ This returns an array containing SeDAS products. [See more](https://geobrowser.s
 from sedas_pyapi.sedas_api import SeDASAPI
 from getpass import getpass
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
 
 sedas.download(singleProduct[0], "/output/path/S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F.zip")
@@ -240,10 +240,10 @@ wkt = "POLYGON ((-1.3295 51.5881," \
 startDate = "2019-04-30T00:00:00Z"
 endDate = "2019-05-12T23:59:59Z"
 
-_username = input("Please enter your username:")
-__password = getpass("Please enter your password:")
+username = input("Please enter your username:")
+password = getpass("Please enter your password:")
 
-sedas = SeDASAPI(_username, __password)
+sedas = SeDASAPI(username, password)
 
 # Search for some images.
 result_sar = sedas.search_sar(wkt, startDate, endDate, sarProductType="SLC")

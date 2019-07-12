@@ -40,9 +40,9 @@ class SeDASAPI:
     _token = None
     _token_time = None
 
-    def __init__(self, _username: str, __password: str) -> None:
-        self._username = _username
-        self.__password = __password
+    def __init__(self, username: str, password: str) -> None:
+        self._username = username
+        self.__password = password
         self.login()
 
     def login(self) -> None:
@@ -83,141 +83,141 @@ class SeDASAPI:
 
     def search(
             self,
-            _wkt: str,
-            _start_date: str,
-            _end_date: str,
-            _sensor: str = 'All',
-            _retry: bool = True,
-            _satellite_name: str = "",
-            _source_group: str = "",
-            **_filters
+            wkt: str,
+            start_date: str,
+            end_date: str,
+            sensor: str = 'All',
+            retry: bool = True,
+            satellite_name: str = "",
+            source_group: str = "",
+            **filters
     ) -> dict:
         """
         Search the SeDAS system for products with the given parameters.
 
         For valid _filters parameters see https://geobrowser.satapps.org/docs/json_ProductFilters.html
 
-        :param _wkt: wkt formatted aoi
-        :param _start_date: start date of search in ISO8601 format
-        :param _end_date: end date of search in ISO8601 format
-        :param _sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
-        :param _retry: should the request be retried if it fails.
-        :param _satellite_name: name of the satellite to search
-        :param _source_group: name of the source group to search
-        :param _filters: filter search on
+        :param wkt: wkt formatted aoi
+        :param start_date: start date of search in ISO8601 format
+        :param end_date: end date of search in ISO8601 format
+        :param sensor: the type of data to search for.  Accepts All, SAR or Optical.  Defaults to All
+        :param retry: should the request be retried if it fails.
+        :param satellite_name: name of the satellite to search
+        :param source_group: name of the source group to search
+        :param filters: filter search on
         :return: list of search results
         """
         self.login()
 
         query = {
-            'sensorFilters': {"type": _sensor},
-            'filters': _filters,
-            'aoiWKT': _wkt,
-            'start': _start_date,
-            'stop': _end_date
+            'sensorFilters': {"type": sensor},
+            'filters': filters,
+            'aoiWKT': wkt,
+            'start': start_date,
+            'stop': end_date
         }
-        if _satellite_name:
-            query['satelliteName'] = _satellite_name
+        if satellite_name:
+            query['satelliteName'] = satellite_name
 
-        if _source_group:
-            query['sourceGroup'] = _source_group
+        if source_group:
+            query['sourceGroup'] = source_group
 
         req = Request(self.search_url, json.dumps(query).encode(), headers=self.headers)
         try:
             resp = urlopen(req)
             return json.load(resp)
         except HTTPError as e:
-            if self._error_handling(e) and _retry:
+            if self._error_handling(e) and retry:
                 return self.search(
-                    _wkt,
-                    _start_date,
-                    _end_date,
-                    _sensor,
-                    _retry=False,
-                    _satellite_name=_satellite_name,
-                    **_filters
+                    wkt,
+                    start_date,
+                    end_date,
+                    sensor,
+                    retry=False,
+                    satellite_name=satellite_name,
+                    **filters
                 )
 
     def search_sar(
             self,
-            _wkt: str,
-            _start_date: str,
-            _end_date: str,
-            _satellite_name: str = "",
-            _source_group: str = "",
-            **_filters
+            wkt: str,
+            start_date: str,
+            end_date: str,
+            satellite_name: str = "",
+            source_group: str = "",
+            **filters
     ) -> dict:
         """
         Search the SeDAS system for SAR products only with the given parameters
 
         For valid _filters parameters see https://geobrowser.satapps.org/docs/json_ProductFilters.html
 
-        :param _wkt: wkt formatted aoi
-        :param _start_date: start date of search in ISO8601 format
-        :param _end_date: end date of search in ISO8601 format
-        :param _satellite_name: name of the satellite to search
-        :param _source_group: name of the source group to search
-        :param _filters: filter search on
+        :param wkt: wkt formatted aoi
+        :param start_date: start date of search in ISO8601 format
+        :param end_date: end date of search in ISO8601 format
+        :param satellite_name: name of the satellite to search
+        :param source_group: name of the source group to search
+        :param filters: filter search on
         :return: list of search results
         """
         return self.search(
-            _wkt,
-            _start_date,
-            _end_date,
+            wkt,
+            start_date,
+            end_date,
             'SAR',
-            _satellite_name=_satellite_name,
-            _source_group=_source_group,
-            **_filters
+            satellite_name=satellite_name,
+            source_group=source_group,
+            **filters
         )
 
     def search_optical(
             self,
-            _wkt: str,
-            _start_date: str,
-            _end_date: str,
-            _satellite_name: str = "",
-            _source_group: str = "",
-            **_filters
+            wkt: str,
+            start_date: str,
+            end_date: str,
+            satellite_name: str = "",
+            source_group: str = "",
+            **filters
     ) -> dict:
         """
         Search the SeDAS system for Optical products only with the given parameters
 
         For valid _filters parameters see https://geobrowser.satapps.org/docs/json_ProductFilters.html
 
-        :param _wkt: wkt formatted aoi
-        :param _start_date: start date of search in ISO8601 format
-        :param _end_date: end date of search in ISO8601 format
-        :param _satellite_name: name of the satellite to search
-        :param _source_group: name of the source group to search
-        :param _filters: filter search on
+        :param wkt: wkt formatted aoi
+        :param start_date: start date of search in ISO8601 format
+        :param end_date: end date of search in ISO8601 format
+        :param satellite_name: name of the satellite to search
+        :param source_group: name of the source group to search
+        :param filters: filter search on
         :return: list of search results
         """
         return self.search(
-            _wkt,
-            _start_date,
-            _end_date,
+            wkt,
+            start_date,
+            end_date,
             'Optical',
-            _satellite_name=_satellite_name,
-            _source_group=_source_group,
-            **_filters
+            satellite_name=satellite_name,
+            source_group=source_group,
+            **filters
         )
 
-    def search_product(self, _product_id: str, _retry: bool = True) -> dict:
+    def search_product(self, product_id: str, retry: bool = True) -> dict:
         """
         Search for information about a known product id.
-        :param _product_id: product id to look for
-        :param _retry: Should the request be retried on error.
+        :param product_id: product id to look for
+        :param retry: Should the request be retried on error.
         :return: search result dictionary
         """
         self.login()
-        url = f"{self.search_url}/products?ids={_product_id}"
+        url = f"{self.search_url}/products?ids={product_id}"
         req = Request(url, headers=self.headers)
         try:
             with urlopen(req) as resp:
                 return json.load(resp)
         except HTTPError as e:
-            if self._error_handling(e) and _retry:
-                return self.search_product(_product_id, _retry=False)
+            if self._error_handling(e) and retry:
+                return self.search_product(product_id, retry=False)
 
     def list_sensor_groups(self, retry: bool = True) -> dict:
         """
@@ -251,63 +251,63 @@ class SeDASAPI:
             if self._error_handling(e) and retry:
                 return self.list_satellites(retry=False)
 
-    def download(self, _product, _output_path: str, _retry: bool = True) -> None:
+    def download(self, product, output_path: str, retry: bool = True) -> None:
         """
         Download a product from sedas
-        :param _product: product dictionary from a search
-        :param _output_path: where to put the output file
-        :param _retry: Should the request be retried on error.
+        :param product: product dictionary from a search
+        :param output_path: where to put the output file
+        :param retry: Should the request be retried on error.
         :return: None
         """
-        with self.download_request(_product, _retry) as resp:
-            with open(_output_path, "+wb") as f:
+        with self.download_request(product, retry) as resp:
+            with open(output_path, "+wb") as f:
                 shutil.copyfileobj(resp, f)
 
-    def download_request(self, _product: dict, _retry: bool = True):
+    def download_request(self, product: dict, retry: bool = True):
         """
         Download a product from sedas, returning the request object.
         Use this over the download function when you don't want the data to touch disk before you do something with it.
-        :param _product: product dictionary from a search
-        :param _retry: Should the request be retried on error.
+        :param product: product dictionary from a search
+        :param retry: Should the request be retried on error.
         :return: response object that can be read to download the file.
         """
         self.login()
-        url = _product['downloadUrl']
+        url = product['downloadUrl']
         if not url:
             raise AttributeError("no download url defined for product")
         req = Request(url, headers=self.headers)
         try:
             return urlopen(req)
         except HTTPError as e:
-            if self._error_handling(e) and _retry:
-                return self.download_request(_product, _retry=False)
+            if self._error_handling(e) and retry:
+                return self.download_request(product, retry=False)
 
-    def request(self, _product, _retry: bool = True) -> str:
+    def request(self, product, retry: bool = True) -> str:
         """
         Request a file from the SeDAS long term archive
-        :param _product: product to request from the search
-        :param _retry: Should the request be retried on error.
+        :param product: product to request from the search
+        :param retry: Should the request be retried on error.
         :return: Request ID
         """
         self.login()
-        url = f"{self.base_url}/request/{_product['supplierId']}"
+        url = f"{self.base_url}/request/{product['supplierId']}"
         req = Request(url, headers=self.headers, method="POST")
         try:
             resp = urlopen(req)
             return json.load(resp)['requestId']
         except HTTPError as e:
-            if self._error_handling(e) and _retry:
-                return self.request(_product, _retry=False)
+            if self._error_handling(e) and retry:
+                return self.request(product, retry=False)
 
-    def is_request_ready(self, _request_id: str, _retry: bool = True):
+    def is_request_ready(self, request_id: str, retry: bool = True):
         """
         checks on the status of a request. If it is complete it will return the download url
-        :param _request_id: request id to check on.
-        :param _retry: Should the request be retried on error.
+        :param request_id: request id to check on.
+        :param retry: Should the request be retried on error.
         :return: download url if the request is complete, None otherwise
         """
         self.login()
-        url = f"{self.base_url}/request?ids={_request_id}"
+        url = f"{self.base_url}/request?ids={request_id}"
         req = Request(url, headers=self.headers)
         try:
             decoded = json.load(urlopen(req))
@@ -315,8 +315,8 @@ class SeDASAPI:
                 return decoded[0]['downloadUrl']
             return None
         except HTTPError as e:
-            if self._error_handling(e) and _retry:
-                return self.is_request_ready(_request_id, _retry=False)
+            if self._error_handling(e) and retry:
+                return self.is_request_ready(request_id, retry=False)
 
     def _error_handling(self, error: HTTPError) -> bool:
         """
