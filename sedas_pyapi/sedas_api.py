@@ -34,6 +34,7 @@ class SeDASAPI:
     base_url = "https://geobrowser.satapps.org/api/"
     authentication_url = f"{base_url}authentication"
     search_url = f"{base_url}search"
+    sensor_url = f"{base_url}sensors"
     headers = {"Content-Type": "application/json", "Authorization": None}
 
     _token = None
@@ -217,6 +218,22 @@ class SeDASAPI:
         except HTTPError as e:
             if self._error_handling(e) and _retry:
                 return self.search_product(_product_id, _retry=False)
+
+    def list_sensor_groups(self, retry: bool = True) -> dict:
+        """
+        Search for information about available source groups.
+        :param retry: Should the request be retried on error.
+        :return: search result dictionary
+        """
+        self.login()
+        url = f"{self.sensor_url}/sourceGroups"
+        req = Request(url, headers=self.headers)
+        try:
+            with urlopen(req) as resp:
+                return json.load(resp)
+        except HTTPError as e:
+            if self._error_handling(e) and retry:
+                return self.list_sensor_groups(retry=False)
 
     def download(self, _product, _output_path: str, _retry: bool = True) -> None:
         """
