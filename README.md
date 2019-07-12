@@ -98,6 +98,32 @@ print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 
 Returns a SeDAS search result object. [See more](https://geobrowser.satapps.org/docs/json_SearchResponse.html)
 
+### Filtering on a group of satellites
+
+Possible filter groups for all users are: 'S1' and 'AIRSAR'.
+Additionally, if you have been approved for SSGP access you can filter on: 'Cosmo-SkyMed', 'SPOT' and 'Pleiades'.
+
+```python
+import json
+from sedas_pyapi.sedas_api import SeDASAPI
+from getpass import getpass
+
+wkt = "POLYGON ((-1.3295 51.5881," \
+          "-1.3013 51.5872," \
+          "-1.3020 51.5621," \
+          "-1.3300 51.5622," \
+          "-1.3295 51.5881))"
+startDate = "2019-04-30T00:00:00Z"
+endDate = "2019-05-12T23:59:59Z"
+
+_username = input("Please enter your username:")
+__password = getpass("Please enter your password:")
+
+sedas = SeDASAPI(_username, __password)
+result_optical = sedas.search_optical(wkt, startDate, endDate, "S2", "")
+print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
+```
+
 ### Search for a single product
 
 ```python
