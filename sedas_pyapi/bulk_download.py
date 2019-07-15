@@ -14,13 +14,14 @@ Copyright 2019 Satellite Applications Catapult
    limitations under the License.
 """
 
+import json
 import logging
 import os
 import queue
 import threading
 import time
 from getpass import getpass
-import json
+from urllib.error import HTTPError
 
 from sedas_pyapi.sedas_api import SeDASAPI
 
@@ -66,10 +67,10 @@ class SeDASBulkDownload:
         self._requested_thread.daemon = True
         self._requested_thread.start()
 
+        self._download_threads = [None] * self._parallel
+
         for i in range(self._parallel):
-            self._download_threads.append(threading.Thread(target=self._downloads, args=()))
-            self._download_threads[i].daemon = True
-            self._download_threads[i].start()
+            self._create_download_thread(i)
 
         self._monitor_thread = threading.Thread(target=self._monitor, args=())
         self._monitor_thread.daemon = True
@@ -117,6 +118,17 @@ class SeDASBulkDownload:
             _logger.info(f"{self._pending_download.qsize()} downloads pending, "
                          f"{self._current_downloads} downloads in progress, "
                          f"{len(self._pending_products)} requests pending")
+            live_threads = 0
+            restarted_threads = 0
+            for i, t in enumerate(self._download_threads):
+                if t.is_alive():
+                    live_threads = live_threads + 1
+                else:
+                    # restart any dead threads.
+                    self._create_download_thread(i)
+                    restarted_threads = restarted_threads + 1
+
+            _logger.info(f"{live_threads} active threads, {restarted_threads} restarted.")
 
             time.sleep(5)
         _logger.debug("monitor thread stopping")
@@ -154,13 +166,26 @@ class SeDASBulkDownload:
                 self._current_downloads = self._current_downloads + 1
                 name = os.path.join(self._prefix, pending['supplierId'] + '.zip')
                 _logger.info(f"downloading {pending['supplierId']} to {name}")
-                self._client.download(pending, name)
+                try:
+                    self._client.download(pending, name)
+                except HTTPError as e:
+                    _logger.error(f"Could not download {pending['supplierId']} due to http error {e} "
+                                  f"putting it back in the queue")
+                    self._pending_download.put(pending)
+                except IOError as e:
+                    _logger.error(f"Could not download {pending['supplierId']} due to io error {e}")
+                    self._pending_download.put(pending)
                 self._current_downloads = self._current_downloads - 1
                 if self._done_queue:
                     self._done_queue.put({'search': pending, 'path': name})
             except queue.Empty:
                 time.sleep(1)
         _logger.debug("download thread stopping")
+
+    def _create_download_thread(self, i):
+        self._download_threads[i] = threading.Thread(target=self._downloads, args=())
+        self._download_threads[i].daemon = True
+        self._download_threads[i].start()
 
 
 if __name__ == '__main__':
