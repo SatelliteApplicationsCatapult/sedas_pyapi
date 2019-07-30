@@ -1,5 +1,8 @@
 # History
 
+## 0.4.1 (2019-07-30)
+* Fix bulk download threads stopping on errors
+
 ## 0.4.0 (2019-07-12)
 This release contains potentially backwards incompatible changes.
 
@@ -20,4 +23,4 @@ This release contains potentially backwards incompatible changes.
 * Initial release on PyPI
 
 ## 0.0.1 (2019-06-04)
-* Initial code release without packaging.
+* Initial code release without packaging
