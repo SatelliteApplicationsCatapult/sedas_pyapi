@@ -1,5 +1,8 @@
 # History
 
+## 0.4.2 (2019-09-11)
+* Add useragent header to stop the SeDAS firewall getting cross
+
 ## 0.4.1 (2019-07-30)
 * Fix bulk download threads stopping on errors
 
