@@ -35,7 +35,7 @@ class SeDASAPI:
     authentication_url = f"{base_url}authentication"
     search_url = f"{base_url}search"
     sensor_url = f"{base_url}sensors"
-    headers = {"Content-Type": "application/json", "Authorization": None}
+    headers = {"Content-Type": "application/json", "User-Agent": "sedas_pyapi", "Authorization": None}
 
     _token = None
     _token_time = None
@@ -311,6 +311,7 @@ class SeDASAPI:
         req = Request(url, headers=self.headers)
         try:
             decoded = json.load(urlopen(req))
+            _logger.debug(json.dumps(decoded))
             if len(decoded) >= 1 and 'downloadUrl' in decoded[0]:
                 return decoded[0]['downloadUrl']
             return None
