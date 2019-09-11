@@ -311,7 +311,6 @@ class SeDASAPI:
         req = Request(url, headers=self.headers)
         try:
             decoded = json.load(urlopen(req))
-            _logger.debug(json.dumps(decoded))
             if len(decoded) >= 1 and 'downloadUrl' in decoded[0]:
                 return decoded[0]['downloadUrl']
             return None
