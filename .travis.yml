@@ -9,4 +9,7 @@ virtualenv:
 script:
     - pip install -r ./requirements.txt
     - python -m unittest discover
-    - make
+    - make venv
+    - make install
+    - make test
+    - make dist
