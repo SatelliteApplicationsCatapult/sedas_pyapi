@@ -7,8 +7,6 @@ python:
 virtualenv:
     system_site_package: true
 script:
-    - pip install -r ./requirements.txt
-    - python -m unittest discover
     - make venv
     - make install
     - make test
