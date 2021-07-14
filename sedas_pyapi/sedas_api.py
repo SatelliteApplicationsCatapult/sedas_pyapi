@@ -43,6 +43,8 @@ class SeDASAPI:
     def __init__(self, username: str, password: str) -> None:
         self._username = username
         self.__password = password
+        
+        
 
     def login(self) -> None:
         """
