@@ -45,7 +45,6 @@ class SeDASAPI:
         self.__password = password
         
         
-
     def login(self) -> None:
         """
         Log into the sedas platform.
@@ -83,7 +82,6 @@ class SeDASAPI:
             raise e
             
             
-
     def search(
             self,
             wkt: str,
