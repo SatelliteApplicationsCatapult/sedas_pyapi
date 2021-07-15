@@ -43,8 +43,7 @@ class SeDASAPI:
     def __init__(self, username: str, password: str) -> None:
         self._username = username
         self.__password = password
-        self.login()
-
+            
     def login(self) -> None:
         """
         Log into the sedas platform.
@@ -80,7 +79,7 @@ class SeDASAPI:
             _logger.error(e)
             _logger.error(e.read().decode())
             raise e
-
+                   
     def search(
             self,
             wkt: str,

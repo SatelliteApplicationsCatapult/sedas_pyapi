@@ -44,6 +44,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 ```
 
 The SeDASAPI object can then be used to access the rest of the api.
@@ -67,6 +68,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 result_optical = sedas.search_optical(wkt, startDate, endDate, maxCloudPercent=50)
 print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -92,6 +94,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 result_sar = sedas.search_sar(wkt, startDate, endDate)
 print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -109,6 +112,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 result_groups = sedas.list_sensor_groups()
 print(json.dumps(result_groups, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -132,6 +136,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 result_sats = sedas.list_satellites()
 print(json.dumps(result_sats, sort_keys=True, indent=4, separators=(',', ': ')))
 
@@ -164,6 +169,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 result_optical = sedas.search_optical(wkt, startDate, endDate, source_group="S2")
 print(json.dumps(result_optical, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -188,6 +194,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 result_sar = sedas.search_sar(wkt, startDate, endDate, satellite_name="Sentinel-1A")
 print(json.dumps(result_sar, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -203,6 +210,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
 print(json.dumps(singleProduct, sort_keys=True, indent=4, separators=(',', ': ')))
 ```
@@ -219,6 +227,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 singleProduct = sedas.search_product("S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F")
 
 sedas.download(singleProduct[0], "/output/path/S1B_IW_GRDH_1SDV_20190528T105030_20190528T105055_016443_01EF3E_5E4F.zip")
@@ -244,6 +253,7 @@ username = input("Please enter your username:")
 password = getpass("Please enter your password:")
 
 sedas = SeDASAPI(username, password)
+sedas.login()
 
 # Search for some images.
 result_sar = sedas.search_sar(wkt, startDate, endDate, sarProductType="SLC")

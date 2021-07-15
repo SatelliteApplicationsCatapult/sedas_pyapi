@@ -22,25 +22,22 @@ from sedas_pyapi.sedas_api import SeDASAPI
 
 class TestSeDASAPI(unittest.TestCase):
     def test_login_bad_creds(self):
+        sedas = SeDASAPI("bogus", "arewyt qu3herilsuhfgloiheloixyhgndikukxjfglzwo this is not a real password")
         self.assertRaises(
             HTTPError,
-            SeDASAPI,
-            "bogus",
-            "arewyt qu3herilsuhfgloiheloixyhgndikukxjfglzwo this is not a real password"
+            sedas.login
         )
 
     def test_blank_username(self):
+        sedas = SeDASAPI("", "is not a real password")
         self.assertRaises(
             ValueError,
-            SeDASAPI,
-            "",
-            "is not a real password"
+            sedas.login
         )
 
     def test_blank_password(self):
+        sedas = SeDASAPI("is not a real username", "")
         self.assertRaises(
             ValueError,
-            SeDASAPI,
-            "is not a real username",
-            ""
+            sedas.login
         )
