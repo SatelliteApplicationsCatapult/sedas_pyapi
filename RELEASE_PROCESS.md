@@ -3,7 +3,7 @@
 This is a note for future releases so we know what to do.
 
 1) Create a new branch prep-<version to be released>
-1) Update the version number in setup.pu
+1) Update the version number in setup.py
 1) Add the release to the top of the HISTORY.md file
 1) Push through a pull request with these changes to master.
 1) Check out master on your machine

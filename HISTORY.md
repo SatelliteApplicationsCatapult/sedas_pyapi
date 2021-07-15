@@ -1,5 +1,11 @@
 # History
 
+## 0.5.0 (2021-07-15)
+This release contains changes for which you will need to update your code.
+
+* Make the login step optional making it easier to access the test environment. Note: you will now need to manually call 
+sedas.login() 
+
 ## 0.4.2 (2019-09-11)
 * Add useragent header to stop the SeDAS firewall getting cross
 
